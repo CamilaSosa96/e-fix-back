@@ -4,4 +4,7 @@
 
 ## E-FIX es una herramienta que permite gestionar órdenes de reparación.
 
-## Entregas:
+## Tecnologías para el Back-End: Node.js MySQL
+
+## Front-End: https://github.com/CamilaSosa96/e-fix-front
+## Documentación: https://github.com/CamilaSosa96/e-fix-doc/wiki
