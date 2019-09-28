@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const bodyParser = require('body-parser');
 const userServices = require('./DBservices/UserService');
+const orderService = require('./DBservices/OrderService');
 
 //------------------MIDDLEWARE SETUP------------------//
 
@@ -31,5 +32,21 @@ router.post('/authUser', (req, res) => {
         }
     });
 });
+
+//------------------ORDER-RELATED REQUESTS------------------//
+
+router.post('/saveOrder', (req, res) => {
+    name = req.body.clientName;
+    dni = req.body.clientDNI;
+    email = req.body.clientEmail;
+    type = req.body.productType;
+    brand = req.body.productBrand;
+    model = req.body.productModel;
+    problem = req.body.problem;
+    orderService.saveOrder(name, dni, email, type, brand, model, problem, (result) =>{
+        console.log(result);
+        res.status(200).send({})
+    })
+})
 
 module.exports = router;
