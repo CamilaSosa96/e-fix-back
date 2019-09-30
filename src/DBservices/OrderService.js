@@ -24,7 +24,8 @@ function getAllOrders(callback){
 }
 
 function updateState(id, state, callback){
-    query = `UPDATE ordenes SET estado_producto='${state}' WHERE id='${id}'`
+    fecha = new Date().toLocaleString({timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone})
+    query = `UPDATE ordenes SET estado_producto='${state}', fecha_actualizacion='${fecha}' WHERE id='${id}'`
     db.query(query, (err, result) => {
         if(err) console.log(err)
         callback(result)
