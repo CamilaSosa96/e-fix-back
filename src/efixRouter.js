@@ -60,6 +60,11 @@ router.post('/updateState/:id/:state', (req, res) => {
     })
 })
     
+router.get('/search/:string', (req, res) =>{
+    orderService.searchOrderByEmail(req.params.string, (result) => {
+        res.status(200).send({result})
+    })
+})
      
 
 module.exports = router;

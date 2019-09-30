@@ -32,4 +32,15 @@ function updateState(id, state, callback){
     })
 }
 
-module.exports = {saveOrder, getAllOrders, updateState}
+function searchOrderByEmail(string, callback){
+    query = `SELECT * FROM ordenes WHERE email_cliente LIKE '%${string}%'`
+    db.query(query, (err, result) =>{
+        if(err) console.log(err)
+        result.forEach((elem)=>{
+            elem.fecha_actualizacion = elem.fecha_actualizacion.toLocaleString({timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone})
+        })
+        callback(result)
+    })
+}
+
+module.exports = {saveOrder, getAllOrders, updateState, searchOrderByEmail}
