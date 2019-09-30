@@ -54,4 +54,12 @@ router.get('/getAllOrders', (req, res) => {
     })
 })
 
+router.post('/updateState/:id/:state', (req, res) => {
+    orderService.updateState(req.params.id, req.params.state, (result) => {
+        res.status(200).send({})
+    })
+})
+    
+     
+
 module.exports = router;

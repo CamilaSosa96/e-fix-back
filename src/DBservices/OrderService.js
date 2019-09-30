@@ -18,10 +18,17 @@ function getAllOrders(callback){
         if(err) console.log(err)
         result.forEach((elem)=>{
             elem.fecha_actualizacion = elem.fecha_actualizacion.toLocaleString({timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone})
-            console.log(elem.fecha_actualizacion)
         })
         callback(result)
     })  
 }
 
-module.exports = {saveOrder, getAllOrders}
+function updateState(id, state, callback){
+    query = `UPDATE ordenes SET estado_producto='${state}' WHERE id='${id}'`
+    db.query(query, (err, result) => {
+        if(err) console.log(err)
+        callback(result)
+    })
+}
+
+module.exports = {saveOrder, getAllOrders, updateState}
