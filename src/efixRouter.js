@@ -44,8 +44,13 @@ router.post('/saveOrder', (req, res) => {
     model = req.body.productModel;
     problem = req.body.problem;
     orderService.saveOrder(name, dni, email, type, brand, model, problem, (result) =>{
-        console.log(result);
         res.status(200).send({})
+    })
+})
+
+router.get('/getAllOrders', (req, res) => {
+    orderService.getAllOrders((result) =>{
+        res.status(200).send({result})
     })
 })
 
