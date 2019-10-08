@@ -1,5 +1,6 @@
 const express = require('express');
 const session = require('express-session');
+const cors = require('cors');
 const router = express.Router();
 const bodyParser = require('body-parser');
 const userServices = require('./DBservices/UserService');
@@ -7,11 +8,21 @@ const orderService = require('./DBservices/OrderService');
 
 //------------------MIDDLEWARE SETUP------------------//
 
+//const host = 'http://localhost:3000' //When accessing locally
+const host = 'http://10.15.77.95:3000' // When accessing from another network (public IP) or from another pc (local IP)
+
 router.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Origin", host);
+    res.header("Access-Control-Allow-Headers", "*");
     res.header("Access-Control-Allow-Headers", "*");
     next();
   });
+
+router.use(cors({
+    origin:['http://localhost:8080'],
+    methods:['GET','POST'],
+    credentials: true
+}));
 
 router.use(session({
 	secret: 'secret',
@@ -32,7 +43,7 @@ router.post('/auth', (req, res) => {
     user = req.body.user;
     pass = req.body.pass;
     userServices.authUser(user, pass, (result) => {
-        if(result !== undefined){    
+        if(result !== undefined){  
 			req.session.loggedin = true;
 			req.session.username = user;
             res.status(200).send({});
