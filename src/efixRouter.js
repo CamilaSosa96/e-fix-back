@@ -8,8 +8,8 @@ const orderService = require('./DBservices/OrderService');
 
 //------------------MIDDLEWARE SETUP------------------//
 
-//const host = 'http://localhost:3000' //When accessing locally
-const host = 'http://10.15.77.95:3000' // When accessing from another network (public IP) or from another pc (local IP)
+const host = 'http://localhost:3000' //When accessing locally
+//const host = 'http://10.15.77.95:3000' // When accessing from another network (public IP) or from another pc (local IP)
 
 router.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", host);
