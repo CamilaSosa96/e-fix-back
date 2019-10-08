@@ -1,4 +1,5 @@
 const express = require('express');
+const session = require('express-session');
 const router = express.Router();
 const bodyParser = require('body-parser');
 const userServices = require('./DBservices/UserService');
@@ -12,6 +13,12 @@ router.use(function(req, res, next) {
     next();
   });
 
+router.use(session({
+	secret: 'secret',
+	resave: true,
+	saveUninitialized: true
+}));
+
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({ extended: true }));
 
@@ -21,11 +28,13 @@ router.use(function (req, res, next) {
 
 //------------------USER-RELATED REQUESTS------------------//
 
-router.post('/authUser', (req, res) => {
+router.post('/auth', (req, res) => {
     user = req.body.user;
     pass = req.body.pass;
     userServices.authUser(user, pass, (result) => {
-        if(result !== undefined){
+        if(result !== undefined){    
+			req.session.loggedin = true;
+			req.session.username = user;
             res.status(200).send({});
         } else {
             res.status(401).send({});
@@ -33,37 +42,57 @@ router.post('/authUser', (req, res) => {
     });
 });
 
+router.get('/isAuthored', (req, res) => {
+    req.session.loggedin ? res.status(200).send({}) : res.status(401).send({})
+})
+
 //------------------ORDER-RELATED REQUESTS------------------//
 
 router.post('/saveOrder', (req, res) => {
-    name = req.body.clientName;
-    dni = req.body.clientDNI;
-    email = req.body.clientEmail;
-    type = req.body.productType;
-    brand = req.body.productBrand;
-    model = req.body.productModel;
-    problem = req.body.problem;
-    orderService.saveOrder(name, dni, email, type, brand, model, problem, (result) =>{
-        res.status(200).send({})
-    })
+    if(req.session.loggedin){
+        name = req.body.clientName;
+        dni = req.body.clientDNI;
+        email = req.body.clientEmail;
+        type = req.body.productType;
+        brand = req.body.productBrand;
+        model = req.body.productModel;
+        problem = req.body.problem;
+        orderService.saveOrder(name, dni, email, type, brand, model, problem, (result) =>{
+            res.status(200).send({})
+        })
+    } else {
+        res.status(401).send({})
+    }
 })
 
 router.get('/getAllOrders', (req, res) => {
-    orderService.getAllOrders((result) =>{
-        res.status(200).send({result})
-    })
+    if(req.session.loggedin) {
+        orderService.getAllOrders((result) =>{
+            res.status(200).send({result})
+        })
+    } else {
+        res.status(401).send({})
+    }
 })
 
 router.post('/updateState/:id/:state', (req, res) => {
-    orderService.updateState(req.params.id, req.params.state, (result) => {
-        res.status(200).send({})
-    })
+    if(req.session.loggedin) {
+        orderService.updateState(req.params.id, req.params.state, (result) => {
+            res.status(200).send({})
+        })
+    } else {
+        res.status(401).send({})
+    }
 })
     
 router.get('/search/:string', (req, res) =>{
-    orderService.searchOrderByEmail(req.params.string, (result) => {
-        res.status(200).send({result})
-    })
+    if(req.session.loggedin) {
+        orderService.searchOrderByEmail(req.params.string, (result) => {
+            res.status(200).send({result})
+        })
+    } else {
+        res.status(401).send({})
+    }
 })
      
 
