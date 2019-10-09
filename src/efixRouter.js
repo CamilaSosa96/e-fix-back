@@ -112,7 +112,5 @@ router.get('/search/:string', (req, res) =>{
         res.status(401).send({})
     }
 })
-     
-//------------------AUXILIAR METHODS------------------//
 
 module.exports = router;
