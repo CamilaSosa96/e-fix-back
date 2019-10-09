@@ -66,7 +66,7 @@ router.get('/endSession', (req, res) => {
 //------------------ORDER-RELATED REQUESTS------------------//
 
 router.post('/saveOrder', (req, res) => {
-    if(req.session.loggedin){
+    doIfAuthored(req, res, () => {
         name = req.body.clientName;
         dni = req.body.clientDNI;
         email = req.body.clientEmail;
@@ -77,40 +77,38 @@ router.post('/saveOrder', (req, res) => {
         orderService.saveOrder(name, dni, email, type, brand, model, problem, (result) =>{
             res.status(200).send({})
         })
-    } else {
-        res.status(401).send({})
-    }
+    })
 })
 
 router.get('/getAllOrders', (req, res) => {
-    if(req.session.loggedin) {
-        console.log(req.session.cookie)
+    doIfAuthored(req, res, () => {
         orderService.getAllOrders((result) =>{
             res.status(200).send({result})
         })
-    } else {
-        res.status(401).send({})
-    }
+    })
 })
 
 router.post('/updateState/:id/:state', (req, res) => {
-    if(req.session.loggedin) {
+    doIfAuthored(req, res, () => {
         orderService.updateState(req.params.id, req.params.state, (result) => {
             res.status(200).send({})
         })
-    } else {
-        res.status(401).send({})
-    }
+    })        
 })
     
 router.get('/search/:string', (req, res) =>{
-    if(req.session.loggedin) {
+    doIfAuthored(req, res, () => {
         orderService.searchOrderByEmail(req.params.string, (result) => {
             res.status(200).send({result})
         })
-    } else {
-        res.status(401).send({})
-    }
+    })
 })
+
+//------------------AUXILIAR METHODS------------------//
+
+function doIfAuthored(req, res, callback){
+    if(req.session.loggedin) callback();
+    else res.status(401).send({})
+}
 
 module.exports = router;

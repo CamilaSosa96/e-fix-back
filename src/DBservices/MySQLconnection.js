@@ -8,7 +8,7 @@ var con = mysql.createConnection({
   });
   
   con.connect(function(err) {
-    if (err) throw err;
+    if (err) throw err; console.log("Could not connect to MySQL database for E-Fix!");
     console.log("Connected to MySQL database for E-Fix!");
   });
 
