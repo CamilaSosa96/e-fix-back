@@ -53,7 +53,7 @@ router.post('/auth', (req, res) => {
 });
 
 router.get('/isAuthored', (req, res) => {
-    req.session.loggedin ? res.status(200).send({}) : res.status(401).send({})
+    req.session.loggedin ? res.status(200).send({user: req.session.username}) : res.status(401).send({})
 })
 
 router.get('/endSession', (req, res) => {
