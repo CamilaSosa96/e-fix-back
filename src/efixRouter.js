@@ -74,7 +74,7 @@ router.post('/saveOrder', (req, res) => {
         brand = req.body.productBrand;
         model = req.body.productModel;
         problem = req.body.problem;
-        orderService.saveOrder(name, dni, email, type, brand, model, problem, (result) =>{
+        orderService.saveOrder(name, dni, email, type, brand, model, problem, (_result) =>{
             res.status(200).send({})
         })
     })
@@ -90,10 +90,18 @@ router.get('/getAllOrders', (req, res) => {
 
 router.post('/updateState/:id/:state', (req, res) => {
     doIfAuthored(req, res, () => {
-        orderService.updateState(req.params.id, req.params.state, (result) => {
+        orderService.updateState(req.params.id, req.params.state, (_result) => {
             res.status(200).send({})
         })
     })        
+})
+
+router.post('/loadBudget', (req, res) =>{
+    doIfAuthored(req, res, () => {
+        orderService.loadBudget(req.body.id, req.body.diagnosis, req.body.budget, (_result)=>{
+            res.status(200).send({})
+        })
+    })
 })
     
 router.get('/search/:string', (req, res) =>{

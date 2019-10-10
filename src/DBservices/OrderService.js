@@ -32,6 +32,15 @@ function updateState(id, state, callback){
     })
 }
 
+function loadBudget(id, diagnosis, budget, callback){
+    query = `UPDATE ordenes SET estado_producto='ESPERANDO_PRESUPUESTO', diagnostico='${diagnosis}',
+            presupuesto='${budget}' WHERE id='${id}'`
+    db.query(query, (err, result) => {
+        if(err) console.log(err)
+        callback(result)
+    })
+}
+
 function searchOrderByEmail(string, callback){
     query = `SELECT * FROM ordenes WHERE email_cliente LIKE '%${string}%'`
     db.query(query, (err, result) =>{
@@ -43,4 +52,4 @@ function searchOrderByEmail(string, callback){
     })
 }
 
-module.exports = {saveOrder, getAllOrders, updateState, searchOrderByEmail}
+module.exports = {saveOrder, getAllOrders, updateState, searchOrderByEmail, loadBudget}
