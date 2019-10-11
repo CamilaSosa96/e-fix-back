@@ -8,19 +8,20 @@ const router = express.Router();
 
 //------------------MIDDLEWARE SETUP------------------//
 
-const host = 'http://localhost:3000' //When accessing locally
-//const host = 'http://10.15.77.95:3000' // When accessing from another network (public IP) or from another pc (local IP)
+let host = ""
 
-router.use((_req, res, next) => {
-    res.header("Access-Control-Allow-Origin", host);
+router.use((req, res, next) => {
+    host = req.headers.origin
+    res.header("Access-Control-Allow-Origin", `${host}`);
     res.header("Access-Control-Allow-Headers", "*");
+    res.header("Access-Control-Allow-Credentials", true);
     next();
   });
 
 router.use(cors({
-    origin:['http://localhost:8080'],
+    origin:[host],
     methods:['GET','POST'],
-    credentials: true
+    credentials: false
 }));
 
 router.use(session({
