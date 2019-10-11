@@ -113,6 +113,27 @@ router.get('/search/:string', (req, res) =>{
     })
 })
 
+router.get('/budgetApproval/:dni/:id', (req, res) => {
+    orderService.getOrderById(req.params.id, req.params.dni, (result) =>{
+        if(result[0] === undefined){
+            res.status(200).send({})
+        } else {
+            res.status(200).send(result[0])
+        }
+    })
+})
+
+router.post('/clientResponse/:id/:dni', (req, res) => {
+    const state = req.body.choice ? 'REPARACION' : 'RETIRAR_SINARREGLO';
+    orderService.updateState(req.params.id, state, (_result)=>{
+        res.status(200).send({})
+    })
+})
+
+router.get('*', (_req, res) => {
+    res.status(404).send({})
+})
+
 //------------------AUXILIAR METHODS------------------//
 
 function doIfAuthored(req, res, callback){
