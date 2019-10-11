@@ -1,10 +1,10 @@
-const express = require('express');
-const session = require('express-session');
-const cors = require('cors');
-const bodyParser = require('body-parser');
-const userServices = require('./DBservices/UserService');
-const orderService = require('./DBservices/OrderService');
-const router = express.Router();
+const express = require('express')
+const session = require('express-session')
+const cors = require('cors')
+const bodyParser = require('body-parser')
+const userServices = require('./DBservices/UserService')
+const orderService = require('./DBservices/OrderService')
+const router = express.Router()
 
 //------------------MIDDLEWARE SETUP------------------//
 
@@ -12,11 +12,11 @@ let host = ""
 
 router.use((req, res, next) => {
     host = req.headers.origin
-    res.header("Access-Control-Allow-Origin", `${host}`);
-    res.header("Access-Control-Allow-Headers", "*");
-    res.header("Access-Control-Allow-Credentials", true);
-    next();
-  });
+    res.header('Access-Control-Allow-Origin', `${host}`)
+    res.header('Access-Control-Allow-Headers', '*')
+    res.header('Access-Control-Allow-Credentials', true)
+    next()
+});
 
 router.use(cors({
     origin:[host],
@@ -30,12 +30,12 @@ router.use(session({
 	saveUninitialized: true
 }));
 
-router.use(bodyParser.json());
-router.use(bodyParser.urlencoded({ extended: true }));
+router.use(bodyParser.json())
+router.use(bodyParser.urlencoded({ extended: true }))
 
 router.use((_req, _res, next) => {
-    next();
- });
+    next()
+ })
 
 //------------------USER-RELATED REQUESTS------------------//
 
@@ -44,14 +44,14 @@ router.post('/auth', (req, res) => {
     pass = req.body.pass;
     userServices.authUser(user, pass, (result) => {
         if(result !== undefined){ 
-			req.session.loggedin = true;
-			req.session.username = user;
-            res.status(200).send({});
+			req.session.loggedin = true
+			req.session.username = user
+            res.status(200).send({})
         } else {
-            res.status(401).send({});
+            res.status(401).send({})
         }
-    });
-});
+    })
+})
 
 router.get('/isAuthored', (req, res) => {
     req.session.loggedin ? res.status(200).send({user: req.session.username}) : res.status(401).send({})
@@ -68,14 +68,14 @@ router.get('/endSession', (req, res) => {
 
 router.post('/saveOrder', (req, res) => {
     doIfAuthored(req, res, () => {
-        name = req.body.clientName;
-        dni = req.body.clientDNI;
-        email = req.body.clientEmail;
-        type = req.body.productType;
-        brand = req.body.productBrand;
-        model = req.body.productModel;
-        problem = req.body.problem;
-        orderService.saveOrder(name, dni, email, type, brand, model, problem, (_result) =>{
+        name = req.body.clientName
+        dni = req.body.clientDNI
+        email = req.body.clientEmail
+        type = req.body.productType
+        brand = req.body.productBrand
+        model = req.body.productModel
+        problem = req.body.problem
+        orderService.saveOrder(name, dni, email, type, brand, model, problem, (_result) => {
             res.status(200).send({})
         })
     })
@@ -83,7 +83,7 @@ router.post('/saveOrder', (req, res) => {
 
 router.get('/getAllOrders', (req, res) => {
     doIfAuthored(req, res, () => {
-        orderService.getAllOrders((result) =>{
+        orderService.getAllOrders((result) => {
             res.status(200).send({result})
         })
     })
@@ -97,9 +97,9 @@ router.post('/updateState/:id/:state', (req, res) => {
     })        
 })
 
-router.post('/loadBudget', (req, res) =>{
+router.post('/loadBudget', (req, res) => {
     doIfAuthored(req, res, () => {
-        orderService.loadBudget(req.body.id, req.body.diagnosis, req.body.budget, (_result)=>{
+        orderService.loadBudget(req.body.id, req.body.diagnosis, req.body.budget, (_result) => {
             res.status(200).send({})
         })
     })
@@ -124,8 +124,8 @@ router.get('/budgetApproval/:dni/:id', (req, res) => {
 })
 
 router.post('/clientResponse/:id/:dni', (req, res) => {
-    const state = req.body.choice ? 'REPARACION' : 'RETIRAR_SINARREGLO';
-    orderService.updateState(req.params.id, state, (_result)=>{
+    const state = req.body.choice ? 'REPARACION' : 'RETIRAR_SINARREGLO'
+    orderService.updateState(req.params.id, state, (_result) => {
         res.status(200).send({})
     })
 })
@@ -137,7 +137,7 @@ router.get('*', (_req, res) => {
 //------------------AUXILIAR METHODS------------------//
 
 function doIfAuthored(req, res, callback){
-    if(req.session.loggedin) callback();
+    if(req.session.loggedin) callback()
     else res.status(401).send({})
 }
 
