@@ -116,7 +116,7 @@ router.get('/search/:string', (req, res) =>{
 router.get('/budgetApproval/:dni/:id', (req, res) => {
     orderService.getOrderById(req.params.id, req.params.dni, (result) =>{
         if(result[0] === undefined){
-            res.status(200).send({})
+            res.status(404).send({})
         } else {
             res.status(200).send(result[0])
         }
