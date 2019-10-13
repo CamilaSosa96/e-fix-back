@@ -1,4 +1,4 @@
-const mysql = require('mysql');
+const mysql = require('mysql')
 
 var con = mysql.createConnection({
     host: "localhost",
@@ -8,8 +8,8 @@ var con = mysql.createConnection({
   });
   
   con.connect(function(err) {
-    if (err) throw err; console.log("Could not connect to MySQL database for E-Fix!");
-    console.log("Connected to MySQL database for E-Fix!");
+    if (err) throw err("Could not connect to MySQL database for E-Fix!")
+    else console.log("Connected to MySQL database for E-Fix!")
   });
 
 module.exports = con;
