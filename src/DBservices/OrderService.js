@@ -15,6 +15,9 @@ function getAllOrders(callback){
     query = 'SELECT * FROM ordenes'
     db.query(query, (err, result) => {
         if(err) console.log(err)
+        result.forEach((elem) => {
+            elem.fecha_actualizacion = elem.fecha_actualizacion.toLocaleString({timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone})
+        })
         callback(result)
     })  
 }
@@ -40,6 +43,9 @@ function searchOrderByEmail(string, callback){
     query = `SELECT * FROM ordenes WHERE email_cliente LIKE '%${string}%'`
     db.query(query, (err, result) => {
         if(err) console.log(err)
+        result.forEach((elem) => {
+            elem.fecha_actualizacion = elem.fecha_actualizacion.toLocaleString({timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone})
+        })
         callback(result)
     })
 }
@@ -48,6 +54,9 @@ function getOrderById(id, dni, callback){
     query = `SELECT * FROM ordenes WHERE id='${id}' AND dni_cliente='${dni}'`
     db.query(query, (err, result) => {
         if(err) console.log(err)
+        result.forEach((elem) => {
+            elem.fecha_actualizacion = elem.fecha_actualizacion.toLocaleString({timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone})
+        })
         callback(result)
     })
 }
