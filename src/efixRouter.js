@@ -68,6 +68,7 @@ router.get('/endSession', (req, res) => {
 
 router.post('/saveOrder', (req, res) => {
     doIfAuthored(req, res, () => {
+        user = req.session.username
         name = req.body.clientName
         dni = req.body.clientDNI
         email = req.body.clientEmail
@@ -75,7 +76,7 @@ router.post('/saveOrder', (req, res) => {
         brand = req.body.productBrand
         model = req.body.productModel
         problem = req.body.problem
-        orderService.saveOrder(name, dni, email, type, brand, model, problem, (_result) => {
+        orderService.saveOrder(user, name, dni, email, type, brand, model, problem, (_result) => {
             res.status(200).send({})
         })
     })
