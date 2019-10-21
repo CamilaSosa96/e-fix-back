@@ -2,7 +2,7 @@ const express = require('express')
 const session = require('express-session')
 const cors = require('cors')
 const bodyParser = require('body-parser')
-const userServices = require('./DBservices/UserService')
+const userService = require('./DBservices/UserService')
 const orderService = require('./DBservices/OrderService')
 const router = express.Router()
 
@@ -42,7 +42,7 @@ router.use((_req, _res, next) => {
 router.post('/auth', (req, res) => {
     user = req.body.user;
     pass = req.body.pass;
-    userServices.authUser(user, pass, (result) => {
+    userService.authUser(user, pass, (result) => {
         if(result !== undefined){ 
 			req.session.loggedin = true
 			req.session.username = user
@@ -58,10 +58,20 @@ router.get('/isAuthored', (req, res) => {
 })
 
 router.get('/endSession', (req, res) => {
-    req.session.destroy((err) =>{
+    req.session.destroy((err) => {
         if(err) console.log(err)
         res.status(200).send({})
     })
+})
+
+router.post('/newUser', (req, res) => {
+    if(req.session.loggedin && (req.session.username === 'Admin')){
+        userService.createUser(req.body.user, req.body.pass, (error) => {
+            if(error) res.status(409).send({})
+            else res.status(201).send({})
+        })   
+    }
+    else res.status(403).send({})
 })
 
 //------------------ORDER-RELATED REQUESTS------------------//
@@ -77,7 +87,7 @@ router.post('/saveOrder', (req, res) => {
         model = req.body.productModel
         problem = req.body.problem
         orderService.saveOrder(user, name, dni, email, type, brand, model, problem, (_result) => {
-            res.status(200).send({})
+            res.status(201).send({})
         })
     })
 })
@@ -151,7 +161,7 @@ function doIfAuthored(req, res, callback){
 function doIfOwner(id, sessionName, res, callback){
     orderService.isOwner(id, sessionName, (result) => {
           if(result || sessionName === 'Admin') callback()
-          else res.status(401).send({}) 
+          else res.status(403).send({}) 
     })
 }
 

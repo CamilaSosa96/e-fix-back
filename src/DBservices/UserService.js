@@ -8,4 +8,12 @@ function authUser(username, password, callback){
     });
 }
 
-module.exports = {authUser};
+function createUser(username, password, callback){
+    query = `INSERT INTO usuarios (usuario, contraseña) VALUES ('${username}', '${password}')`
+    db.query(query, (err, _result) => {
+        if(err) console.log(err)
+        callback(err)
+    })
+}
+
+module.exports = {authUser, createUser};
