@@ -61,4 +61,12 @@ function getOrderById(id, dni, callback){
     })
 }
 
-module.exports = {saveOrder, getAllOrders, updateState, searchOrderByEmail, loadBudget, getOrderById}
+function isOwner(id, username, callback){
+    query = `SELECT * FROM ordenes WHERE id='${id}'`
+    db.query(query, (err, result) => {
+        if(err) console.log(err)
+        callback(username === result[0].usuario_tecnico)
+    })
+}
+
+module.exports = {saveOrder, getAllOrders, updateState, searchOrderByEmail, loadBudget, getOrderById, isOwner}

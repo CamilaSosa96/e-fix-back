@@ -91,17 +91,21 @@ router.get('/getAllOrders', (req, res) => {
 })
 
 router.post('/updateState/:id/:state', (req, res) => {
-    doIfAuthored(req, res, () => {
-        orderService.updateState(req.params.id, req.params.state, (_result) => {
-            res.status(200).send({})
+    doIfAuthored(req, res, () => {    
+        doIfOwner(req.params.id, req.session.username, res, () => {
+            orderService.updateState(req.params.id, req.params.state, (_result) => {
+                res.status(200).send({})
+            })
         })
     })        
 })
 
 router.post('/loadBudget', (req, res) => {
     doIfAuthored(req, res, () => {
-        orderService.loadBudget(req.body.id, req.body.diagnosis, req.body.budget, (_result) => {
-            res.status(200).send({})
+        doIfOwner(req.body.id, req.session.username, res, () => {
+            orderService.loadBudget(req.body.id, req.body.diagnosis, req.body.budget, (_result) => {
+                res.status(200).send({})
+            })
         })
     })
 })
@@ -138,8 +142,17 @@ router.get('*', (_req, res) => {
 //------------------AUXILIAR METHODS------------------//
 
 function doIfAuthored(req, res, callback){
-    if(req.session.loggedin) callback()
+    if(req.session.loggedin){
+         callback()
+    }
     else res.status(401).send({})
+}
+
+function doIfOwner(id, sessionName, res, callback){
+    orderService.isOwner(id, sessionName, (result) => {
+          if(result || sessionName === 'Admin') callback()
+          else res.status(401).send({}) 
+    })
 }
 
 module.exports = router;
