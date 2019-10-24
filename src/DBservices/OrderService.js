@@ -8,7 +8,7 @@ function saveOrder(user, clientName, clientDNI, clientEmail, productType, produc
     db.query(query, (err, result) => {
         if(err) console.log(err)
         callback(result)
-    });
+    })
 }
 
 function getAllOrders(callback){

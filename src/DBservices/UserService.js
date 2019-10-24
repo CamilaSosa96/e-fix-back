@@ -1,5 +1,5 @@
 const db = require('./MySQLconnection')
-const sha1 = require('sha1');
+const sha1 = require('sha1')
 
 function authUser(username, password, callback){
     pass = sha1(password)
@@ -7,7 +7,7 @@ function authUser(username, password, callback){
     db.query(query, (err, result) => {
         if(err) console.log(err)
         callback(result[0])
-    });
+    })
 }
 
 function createUser(username, password, callback){
@@ -18,4 +18,4 @@ function createUser(username, password, callback){
     })
 }
 
-module.exports = {authUser, createUser};
+module.exports = {authUser, createUser}

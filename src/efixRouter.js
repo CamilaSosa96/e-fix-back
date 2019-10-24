@@ -16,19 +16,19 @@ router.use((req, res, next) => {
     res.header('Access-Control-Allow-Headers', '*')
     res.header('Access-Control-Allow-Credentials', true)
     next()
-});
+})
 
 router.use(cors({
     origin:[host],
     methods:['GET','POST'],
     credentials: false
-}));
+}))
 
 router.use(session({
 	secret: 'secret',
 	resave: true,
 	saveUninitialized: true
-}));
+}))
 
 router.use(bodyParser.json())
 router.use(bodyParser.urlencoded({extended: true}))
@@ -155,4 +155,4 @@ function doIfOwner(id, sessionName, res, callback){
     })
 }
 
-module.exports = router;
+module.exports = router

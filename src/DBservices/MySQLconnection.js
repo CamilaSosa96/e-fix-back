@@ -12,4 +12,4 @@ const con = mysql.createConnection({
     else console.log('Connected to MySQL database for E-Fix!')
   })
 
-module.exports = con;
+module.exports = con
