@@ -1,7 +1,7 @@
 # E-FIX
 :wrench: :pencil2: :wrench: :pencil2: :wrench: :pencil2: :wrench: :pencil2: :wrench: :pencil2: :wrench: :pencil2: :wrench: :pencil2: :wrench: :pencil2: :wrench: :pencil2: :wrench: :pencil2: :wrench: :pencil2: :wrench: :pencil2: :wrench: :pencil2: :wrench: :pencil2:
 
-<img src="./efixlogo.png" height="150">
+<img src="https://raw.github.com/CamilaSosa96/e-fix-doc/master/./efixlogo.png" height="150">
 
 ### E-FIX es una herramienta que permite gestionar órdenes de reparación.
 
