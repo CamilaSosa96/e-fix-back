@@ -75,8 +75,8 @@ router.post('/newUser', (req, res) => {
 router.post('/updatePassword', (req, res) => {
     doIfAuthored(req, res, () => {
         if(req.session.username === req.body.user || req.session.username === 'Admin'){
-            userService.changePassword(req.body.user, req.body.newPass, () => {
-                res.status(201).send()
+            userService.changePassword(req.body.user, req.body.newPass, (result) => {
+                res.status(201).send({userExists: result.changedRows})
             })
         }
         else res.status(403).send()

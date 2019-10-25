@@ -21,9 +21,9 @@ function createUser(username, password, callback){
 function changePassword(username, password, callback){
     pass = sha1(password)
     query = `UPDATE usuarios SET contraseña='${pass}' WHERE usuario='${username}'`
-    db.query(query, (err, _result) => {
+    db.query(query, (err, result) => {
         if(err) console.log(err)
-        callback()
+        callback(result)
     })
 }
 
