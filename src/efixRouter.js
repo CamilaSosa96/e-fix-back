@@ -72,6 +72,17 @@ router.post('/newUser', (req, res) => {
     else res.status(403).send()
 })
 
+router.post('/updatePassword', (req, res) => {
+    doIfAuthored(req, res, () => {
+        if(req.session.username === req.body.user || req.session.username === 'Admin'){
+            userService.changePassword(req.body.user, req.body.newPass, () => {
+                res.status(201).send()
+            })
+        }
+        else res.status(403).send()
+    })
+})
+
 //------------------ORDER-RELATED REQUESTS------------------//
 
 router.post('/saveOrder', (req, res) => {

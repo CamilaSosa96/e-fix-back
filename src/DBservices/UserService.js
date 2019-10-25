@@ -18,4 +18,13 @@ function createUser(username, password, callback){
     })
 }
 
-module.exports = {authUser, createUser}
+function changePassword(username, password, callback){
+    pass = sha1(password)
+    query = `UPDATE usuarios SET contraseña='${pass}' WHERE usuario='${username}'`
+    db.query(query, (err, _result) => {
+        if(err) console.log(err)
+        callback()
+    })
+}
+
+module.exports = {authUser, createUser, changePassword}
