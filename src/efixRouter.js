@@ -4,6 +4,7 @@ const cors = require('cors')
 const bodyParser = require('body-parser')
 const userService = require('./DBservices/UserService')
 const orderService = require('./DBservices/OrderService')
+const settingsService = require('./DBservices/SettingsService')
 const router = express.Router()
 
 //------------------MIDDLEWARE SETUP------------------//
@@ -36,6 +37,20 @@ router.use(bodyParser.urlencoded({extended: true}))
 router.use((_req, _res, next) => {
     next()
  })
+
+//------------------SETTINGS-RELATED REQUESTS------------------//
+
+router.post('/saveSettings', (req, res) => {
+    settingsService.saveSettings(req.body.settings, () => {
+        res.status(200).send()
+    })
+})
+
+router.get('/getSettings', (req, res) => {
+    settingsService.getSettings((result) => {
+        res.status(200).send(result)
+    })
+})
 
 //------------------USER-RELATED REQUESTS------------------//
 
