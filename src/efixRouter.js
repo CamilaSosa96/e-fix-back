@@ -5,6 +5,7 @@ const bodyParser = require('body-parser')
 const userService = require('./DBservices/UserService')
 const orderService = require('./DBservices/OrderService')
 const settingsService = require('./DBservices/SettingsService')
+const emailService = require('./EmailService/NofiticationMailDeliver')
 const router = express.Router()
 
 //------------------MIDDLEWARE SETUP------------------//
@@ -46,9 +47,24 @@ router.post('/saveSettings', (req, res) => {
     })
 })
 
-router.get('/getSettings', (req, res) => {
+router.get('/getSettings', (_req, res) => {
     settingsService.getSettings((result) => {
         res.status(200).send(result)
+    })
+})
+
+
+//------------------EMAIL-RELATED REQUESTS------------------//
+
+router.post('/sendEmail', (_req, res) => {
+    emailService.sendMail('sosacamilaines@gmail.com', {
+        subject: "Reparation", 
+        from:"efix@gmail.com", 
+        message: "Esta reparado"
+    }, (err) => {
+        console.log(err)
+        if(err) res.status(404).send()
+        else res.status(200).send()
     })
 })
 
