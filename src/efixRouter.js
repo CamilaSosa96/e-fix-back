@@ -42,15 +42,21 @@ router.use((_req, _res, next) => {
 //------------------SETTINGS-RELATED REQUESTS------------------//
 
 router.post('/saveSettings', (req, res) => {
-    settingsService.saveSettings(req.body.settings, () => {
-        res.status(200).send()
-    })
+    if(req.session.loggedin && (req.session.username === 'Admin')){
+        settingsService.saveSettings(req.body.settings, () => {
+            res.status(200).send()
+        })
+    }
+    else res.status(403).send()
 })
 
 router.get('/getSettings', (_req, res) => {
-    settingsService.getSettings((result) => {
-        res.status(200).send(result)
-    })
+    if(req.session.loggedin && (req.session.username === 'Admin')){
+        settingsService.getSettings((result) => {
+            res.status(200).send(result)
+        }) 
+    }
+    else res.status(403).send()
 })
 
 
@@ -60,9 +66,8 @@ router.post('/sendEmail', (_req, res) => {
     emailService.sendMail('sosacamilaines@gmail.com', {
         subject: "Reparation", 
         from:"efix@gmail.com", 
-        message: "Esta reparado"
+        message: "Tu producto esta reparado"
     }, (err) => {
-        console.log(err)
         if(err) res.status(404).send()
         else res.status(200).send()
     })

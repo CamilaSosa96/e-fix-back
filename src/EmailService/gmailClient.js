@@ -1,8 +1,9 @@
 const fs = require('fs')
+const path = require('path')
 const {google} = require('googleapis')
 
-const CREDENTIALS_PATH = 'credentials.json'
-const TOKEN_PATH = 'token.json'
+const CREDENTIALS_PATH = path.resolve(__dirname, '../EmailService/credentials.json')
+const TOKEN_PATH = path.resolve(__dirname, '../EmailService/token.json')
 
 function getGmailClient() {
     const credentials = fs.readFileSync(CREDENTIALS_PATH)
