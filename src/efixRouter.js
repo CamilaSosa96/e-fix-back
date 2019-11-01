@@ -6,6 +6,7 @@ const userService = require('./DBservices/UserService')
 const orderService = require('./DBservices/OrderService')
 const settingsService = require('./DBservices/SettingsService')
 const emailService = require('./EmailService/NofiticationMailDeliver')
+const authService = require('./EmailService/getOAuthToken')
 const router = express.Router()
 
 //------------------MIDDLEWARE SETUP------------------//
@@ -50,7 +51,7 @@ router.post('/saveSettings', (req, res) => {
     else res.status(403).send()
 })
 
-router.get('/getSettings', (_req, res) => {
+router.get('/getSettings', (req, res) => {
     if(req.session.loggedin && (req.session.username === 'Admin')){
         settingsService.getSettings((result) => {
             res.status(200).send(result)
@@ -62,6 +63,25 @@ router.get('/getSettings', (_req, res) => {
 
 //------------------EMAIL-RELATED REQUESTS------------------//
 
+router.get('/emailOAuth', (req, res) => {
+    if(req.session.loggedin && (req.session.username === 'Admin')) {
+        authService.getOAuthLink((err, OAuthLink) => {
+            if(err) res.status(404).send()
+            else res.status(200).send({link: OAuthLink})
+        })
+    } else { res.status(403).send() }
+})
+
+router.post('/OAuthCode', (req, res) => {
+    if(req.session.loggedin && (req.session.username === 'Admin')) {
+        authService.sendOAuthCode(req.body.code, (err) => {
+            if(err) res.status(404).send()
+            else settingsService.saveEmailAuth(() => {res.status(200).send()})
+        })
+    } else { res.status(403).send() }
+})
+
+// Test Endpoint
 router.post('/sendEmail', (_req, res) => {
     emailService.sendMail('sosacamilaines@gmail.com', {
         subject: "Reparation", 

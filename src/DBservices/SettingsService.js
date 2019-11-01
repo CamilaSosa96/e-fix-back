@@ -13,6 +13,14 @@ function saveSettings(settings, callback){
     })
 }
 
+function saveEmailAuth(callback){
+    query = 'UPDATE preferencias SET email_auth=true'
+    db.query(query, (err, _result) => {
+        if(err) console.log(err)
+        callback()
+    })
+}
+
 function getSettings(callback){
     query = 'SELECT * FROM preferencias'
     db.query(query, (err, result) => {
@@ -21,4 +29,4 @@ function getSettings(callback){
     })
 }
 
-module.exports = {saveSettings, getSettings}
+module.exports = {saveSettings, getSettings, saveEmailAuth}
