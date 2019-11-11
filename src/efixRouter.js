@@ -76,9 +76,9 @@ router.post('/OAuthCode', (req, res) => {
     if(req.session.loggedin && (req.session.username === 'Admin')) {
         authService.sendOAuthCode(req.body.code, (err) => {
             if(err) res.status(404).send()
-            else settingsService.saveEmailAuth(() => {res.status(200).send()})
+            else res.status(200).send()
         })
-    } else { res.status(403).send() }
+    } else res.status(403).send() 
 })
 
 // Test Endpoint
