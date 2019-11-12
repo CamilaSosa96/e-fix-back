@@ -46,5 +46,11 @@ function sendOAuthCode(code, callback){
     }
   })
 }
+
+function isAuthored(callback){
+  fs.readFile(TOKEN_PATH, (_err, content) =>{
+    callback(content !== undefined)
+  })
+}
     
-module.exports = {getOAuthLink, sendOAuthCode}
+module.exports = {getOAuthLink, sendOAuthCode, isAuthored}

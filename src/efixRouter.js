@@ -81,6 +81,12 @@ router.post('/OAuthCode', (req, res) => {
     } else res.status(403).send() 
 })
 
+router.get('/isEmailAuthored', (_req, res) => {
+    authService.isAuthored((result) => {
+        res.status(200).send({auth: result})
+    })
+})
+
 // Test Endpoint
 router.post('/sendEmail', (_req, res) => {
     emailService.sendMail('sosacamilaines@gmail.com', {
