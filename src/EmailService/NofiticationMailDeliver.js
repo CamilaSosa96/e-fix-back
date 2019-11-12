@@ -1,29 +1,29 @@
 const getGmailClient = require('./gmailClient')
 
-function sendMail(address, mail, callback){
-  try {
-    const gmailClient = getGmailClient()
-    gmailClient.users.messages.send(
-      {
-        userId: 'me',
+function sendMail(emailInfo, callback){
+  if(emailInfo.send){
+    try {
+      const gmailClient = getGmailClient()
+      gmailClient.users.messages.send(
+        {
+          userId: 'me',
           requestBody: {
-            raw: createMessage(address, mail),
-          },
-      }
-    )
-    callback(null)
-  } catch (e){
-    callback(e)
-  }
+            raw: createMessage(emailInfo),
+          }
+        }
+      )
+      callback(null)
+    } catch (e) {callback(e)}
+  } else callback(null)
 }
 
-function createMessage(address, mail) {
-  const subject = mail.subject
-  const from = mail.from
-  const message = mail.message
+function createMessage(emailInfo) {
+  const clientName = emailInfo.clientName
+  const clientAddress = emailInfo.clientAddress
+  const subject = emailInfo.subject
+  const message = emailInfo.message
   const messageParts = [
-    `From: ${from}`,
-    `To: UNQfy subscriber <${address}>`,
+    `To: ${clientName} <${clientAddress}>`,
     'Content-Type: text/html; charset=utf-8',
     'MIME-Version: 1.0',
     `Subject: ${subject}`,

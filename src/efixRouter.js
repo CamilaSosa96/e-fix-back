@@ -6,6 +6,7 @@ const userService = require('./DBservices/UserService')
 const orderService = require('./DBservices/OrderService')
 const settingsService = require('./DBservices/SettingsService')
 const emailService = require('./EmailService/NofiticationMailDeliver')
+const mailGenerator = require('./EmailService/MailGenerator')
 const authService = require('./EmailService/getOAuthToken')
 const router = express.Router()
 
@@ -87,18 +88,6 @@ router.get('/isEmailAuthored', (_req, res) => {
     })
 })
 
-// Test Endpoint
-router.post('/sendEmail', (_req, res) => {
-    emailService.sendMail('sosacamilaines@gmail.com', {
-        subject: "Reparation", 
-        from:"efix@gmail.com", 
-        message: "Tu producto esta reparado"
-    }, (err) => {
-        if(err) res.status(404).send()
-        else res.status(200).send()
-    })
-})
-
 //------------------USER-RELATED REQUESTS------------------//
 
 router.post('/auth', (req, res) => {
@@ -158,7 +147,12 @@ router.post('/saveOrder', (req, res) => {
         model = req.body.productModel
         problem = req.body.problem
         orderService.saveOrder(user, name, dni, email, type, brand, model, problem, (_result) => {
-            res.status(201).send()
+            mailGenerator.firstEmail(email, name, type, brand, model, (mail) => {
+                emailService.sendMail(mail, (err) => {
+                    if(err) res.status(404).send()
+                    res.status(200).send()
+                })
+            })
         })
     })
 })
@@ -175,6 +169,7 @@ router.post('/updateState/:id/:state', (req, res) => {
     doIfAuthored(req, res, () => {    
         doIfOwner(req.params.id, req.session.username, res, () => {
             orderService.updateState(req.params.id, req.params.state, (_result) => {
+                //TODO - Enviar mail cambio estado
                 res.status(200).send()
             })
         })
@@ -185,6 +180,7 @@ router.post('/loadBudget', (req, res) => {
     doIfAuthored(req, res, () => {
         doIfOwner(req.body.id, req.session.username, res, () => {
             orderService.loadBudget(req.body.id, req.body.diagnosis, req.body.budget, (_result) => {
+                //TODO - Enviar mail presupuesto
                 res.status(200).send()
             })
         })
@@ -208,6 +204,7 @@ router.get('/budgetApproval/:dni/:id', (req, res) => {
 router.post('/clientResponse/:id/:dni', (req, res) => {
     const state = req.body.choice ? 'REPARACION' : 'RETIRAR_SINARREGLO'
     orderService.updateState(req.params.id, state, (_result) => {
+        //TODO - Enviar mail cambio estado
         res.status(200).send()
     })
 })
