@@ -166,8 +166,8 @@ router.get('/getAllOrders', (req, res) => {
 })
 
 router.post('/updateState/:id/:state', (req, res) => {
-    id = req.params.id
-    state = req.params.state
+    const id = req.params.id
+    const state = req.params.state
     doIfAuthored(req, res, () => {   
         doIfOwner(id, req.session.username, res, () => {
             orderService.updateState(id, state, (_result) => {
@@ -208,10 +208,15 @@ router.get('/budgetApproval/:dni/:id', (req, res) => {
 })
 
 router.post('/clientResponse/:id/:dni', (req, res) => {
+    const id = req.params.id
     const state = req.body.choice ? 'REPARACION' : 'RETIRAR_SINARREGLO'
-    orderService.updateState(req.params.id, state, (_result) => {
-        //TODO - Enviar mail cambio estado
-        res.status(200).send()
+    orderService.updateState(id, state, (_result) => {
+        mailGenerator.stateUpdateMail(id, (mail) => {
+            emailService.sendMail(mail, (err) => {
+                if(err) res.status(404).send()
+                else res.status(200).send()
+            })
+        })
     })
 })
 
