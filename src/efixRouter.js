@@ -150,7 +150,7 @@ router.post('/saveOrder', (req, res) => {
             mailGenerator.firstEmail(email, name, type, brand, model, (mail) => {
                 emailService.sendMail(mail, (err) => {
                     if(err) res.status(404).send()
-                    res.status(200).send()
+                    else res.status(200).send()
                 })
             })
         })
@@ -166,14 +166,20 @@ router.get('/getAllOrders', (req, res) => {
 })
 
 router.post('/updateState/:id/:state', (req, res) => {
-    doIfAuthored(req, res, () => {    
-        doIfOwner(req.params.id, req.session.username, res, () => {
-            orderService.updateState(req.params.id, req.params.state, (_result) => {
-                //TODO - Enviar mail cambio estado
-                res.status(200).send()
+    id = req.params.id
+    state = req.params.state
+    doIfAuthored(req, res, () => {   
+        doIfOwner(id, req.session.username, res, () => {
+            orderService.updateState(id, state, (_result) => {
+                mailGenerator.stateUpdateMail(id, (mail) => {
+                    emailService.sendMail(mail, (err) => {
+                        if(err) res.status(404).send()
+                        else res.status(200).send()
+                    })
+                })
             })
         })
-    })        
+    })    
 })
 
 router.post('/loadBudget', (req, res) => {

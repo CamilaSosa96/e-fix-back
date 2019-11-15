@@ -50,6 +50,17 @@ function searchOrderByEmail(string, callback){
     })
 }
 
+function getOrder(id, callback){
+    query = `SELECT * FROM ordenes WHERE id='${id}'`
+    db.query(query, (err, result) => {
+        if(err) console.log(err)
+        result.forEach((elem) => {
+            elem.fecha_actualizacion = elem.fecha_actualizacion.toLocaleString({timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone})
+        })
+        callback(result[0])
+    })
+}
+
 function getOrderById(id, dni, callback){
     query = `SELECT * FROM ordenes WHERE id='${id}' AND dni_cliente='${dni}'`
     db.query(query, (err, result) => {
@@ -69,4 +80,4 @@ function isOwner(id, username, callback){
     })
 }
 
-module.exports = {saveOrder, getAllOrders, updateState, searchOrderByEmail, loadBudget, getOrderById, isOwner}
+module.exports = {saveOrder, getAllOrders, updateState, searchOrderByEmail, loadBudget, getOrderById, isOwner, getOrder}
