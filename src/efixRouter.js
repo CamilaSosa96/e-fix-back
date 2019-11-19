@@ -13,6 +13,9 @@ const router = express.Router()
 //------------------MIDDLEWARE SETUP------------------//
 
 let host = ''
+const ip = 'http://localhost:3000' 
+//Replace 'local host' with the IP where the client will access to the budget approval screen. 
+//Configure a port forwarding in your router, to redirect the traffic to your private IP.
 
 router.use((req, res, next) => {
     host = req.headers.origin
@@ -183,11 +186,16 @@ router.post('/updateState/:id/:state', (req, res) => {
 })
 
 router.post('/loadBudget', (req, res) => {
+    const  id = req.body.id
     doIfAuthored(req, res, () => {
-        doIfOwner(req.body.id, req.session.username, res, () => {
+        doIfOwner(id, req.session.username, res, () => {
             orderService.loadBudget(req.body.id, req.body.diagnosis, req.body.budget, (_result) => {
-                //TODO - Enviar mail presupuesto
-                res.status(200).send()
+                mailGenerator.sendBudgetMail(id, ip, (mail) => {
+                    emailService.sendMail(mail, (err) => {
+                        if(err) res.status(404).send()
+                        else res.status(200).send()
+                    })
+                })
             })
         })
     })
