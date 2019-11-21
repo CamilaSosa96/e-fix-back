@@ -33,6 +33,8 @@
 - (Opcional) Abrir el archivo 'MySQLconnection' y editar los valores de la variable 'con', completando los datos
 correspondientes al servidor de datos.
 
+- (Opcional) Para el envío de email con presupuesto al cliente, se debe configurar la dirección IP a la que este va a acceder para aprobar o no la reparación. Esto se hace en el archivo efixRouter, editando la constante 'ip'. Poner la IP pública de la red, y configurar en el router un port forwarding hacia el IP de la máquina en donde esté corriendo el front-end.
+
 - Abrir una terminal desde VS Code en la ruta '/e-fix-back' y ejecutar 'npm i' para instalar las dependencias.
 
 - Ejecutar 'cd src' para entrar al directorio src. Allí ejecutar 'node efixservice' para inicial el servidor.
